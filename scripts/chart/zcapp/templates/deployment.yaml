@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zcapp
+  namespace: zc
+  labels:
+    app: zcapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zcapp
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: zcapp
+    spec:
+      containers:
+      - name: zcapp
+        image: zclin/zcapp:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+        env:
+          - name: WEB_PORT
+            value: "8080"
+          - name: HTTPS_KEY
+            value: "/secrets/key.pem"
+          - name: HTTPS_CERT
+            value: "/secrets/cert.pem"
+          - name: REDIS_HOST
+            value: "redis"
+          - name: REDIS_PORT
+            value: "6379"
+          - name: REDIS_PASSWORD
+            value: ""
+          - name: POSTGRES_HOST
+            value: "postgres"
+          - name: POSTGRES_PORT
+            value: "5432"
+          - name: POSTGRES_DB
+            value: "zc"
+          - name: POSTGRES_USER
+            value: "zc"
+          - name: POSTGRES_PASSWORD
+            value: "youcantseeme"
+          - name: SECRET_PASSPHRASE
+            value: "youcantseeme"
+          - name: SECRET_SALT
+            value: "youcantseeme"
+        volumeMounts:
+          - name: certs
+            mountPath: "/secrets"
+      volumes:
+      - name: certs
+        hostPath:
+          path: "/Users/zc/GitHub/zc/secrets"
+          type: Directory

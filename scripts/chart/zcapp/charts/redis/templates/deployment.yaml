@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: zc
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  minReadySeconds: 15
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+      - name: redis
+        image: redis
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 6379
+        env:
+          - name: REDIS_HOST
+            value: "redis"
+          - name: REDIS_PORT
+            value: "6379"
+          - name: REDIS_PASSWORD
+            value: ""
+        command: ["redis-server"]
+        args: ["--appendonly yes", "--notify-keyspace-events Ex"]
+        volumeMounts:
+          - name: datadir
+            mountPath: "/data"
+      volumes:
+      - name: datadir
+        hostPath:
+          path: "/Users/zc/GitHub/zc/datadir/redis"
+          type: Directory

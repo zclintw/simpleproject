@@ -1,0 +1,17 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:13
+    ports:
+      - 35432:5432
+    volumes:
+      - "./datadir/pg:/var/lib/postgresql/data"
+    env_file:
+      - .env.dev
+  redis:
+    image: redis
+    ports:
+      - 36379:6379
+    volumes:
+      - "./datadir/redis:/data"
+    command: redis-server --appendonly yes --notify-keyspace-events Ex

@@ -1,0 +1,676 @@
+{
+	"info": {
+		"_postman_id": "95102a2b-9df8-4a71-84cb-91b7bf35a1d2",
+		"name": "Task Management API Documentation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "tasks",
+			"item": [
+				{
+					"name": "{task Id}",
+					"item": [
+						{
+							"name": "Get the specific task",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "a3b8b2ff-5adc-44c9-b2b3-8a5e6f6bac94",
+										"exec": [
+											"const moment = require('moment');",
+											"",
+											"const accessKeyId = pm.environment.get('accessKeyId');",
+											"const accessSecret = pm.environment.get('accessSecret');",
+											"",
+											"const path = pm.request.url.getPath();",
+											"const query = pm.request.url.getQueryString();",
+											"const timestamp = moment().valueOf();",
+											"pm.environment.set('X-Timestamp', timestamp);",
+											"",
+											"const url = `${path}${query}`;",
+											"const method = pm.request.method;",
+											"const stringToSign = `${method}\\n${url}\\n${timestamp}`;",
+											"console.log(stringToSign)",
+											"",
+											"const signature = CryptoJS.HmacSHA256(stringToSign, accessSecret).toString(CryptoJS.enc.Base64)",
+											"console.log(\"signature\", signature);",
+											"const authorization = `hmac ${accessKeyId}=${signature}`",
+											"console.log(authorization)",
+											"pm.environment.set('Authorization', authorization)"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"description": "(Required) hmac accessKeyId=signature",
+										"key": "Authorization",
+										"value": "{{Authorization}}"
+									},
+									{
+										"description": "(Required) The unit is millisecond",
+										"key": "X-Timestamp",
+										"value": "{{X-Timestamp}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/v1/tasks/27",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v1",
+										"tasks",
+										"27"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Untitled Example",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"description": "(Required) hmac accessKeyId=signature",
+												"key": "Authorization",
+												"value": "hmac accessKeyId=signature"
+											},
+											{
+												"description": "(Required) The unit is millisecond",
+												"key": "X-Timestamp",
+												"value": "1607184000"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/tasks/:taskId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"tasks",
+												":taskId"
+											],
+											"variable": [
+												{
+													"key": "taskId"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"data\": {\n  \"id\": 1,\n  \"creator\": \"zclin.tw@gmail.com\",\n  \"state\": \"pending\",\n  \"ttl\": 7200\n }\n}"
+								}
+							]
+						},
+						{
+							"name": "Approve the specific task, move it to the task queue",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"id": "8dbff312-0c94-4dfa-ba45-6c768850063b",
+										"exec": [
+											"const moment = require('moment');",
+											"",
+											"const accessKeyId = pm.environment.get('accessKeyId');",
+											"const accessSecret = pm.environment.get('accessSecret');",
+											"",
+											"const path = pm.request.url.getPath();",
+											"const query = pm.request.url.getQueryString();",
+											"const timestamp = moment().valueOf();",
+											"pm.environment.set('X-Timestamp', timestamp);",
+											"",
+											"const url = `${path}${query}`;",
+											"const method = pm.request.method;",
+											"const stringToSign = `${method}\\n${url}\\n${timestamp}`;",
+											"console.log(stringToSign)",
+											"",
+											"const signature = CryptoJS.HmacSHA256(stringToSign, accessSecret).toString(CryptoJS.enc.Base64)",
+											"console.log(\"signature\", signature);",
+											"const authorization = `hmac ${accessKeyId}=${signature}`",
+											"console.log(authorization)",
+											"pm.environment.set('Authorization', authorization)"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "(Required) hmac accessKeyId=signature",
+										"key": "Authorization",
+										"value": "{{Authorization}}"
+									},
+									{
+										"description": "(Required) The unit is millisecond",
+										"key": "X-Timestamp",
+										"value": "{{X-Timestamp}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/v1/tasks/38/approved",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"v1",
+										"tasks",
+										"38",
+										"approved"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "Untitled Example",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"description": "(Required) hmac accessKeyId=signature",
+												"key": "Authorization",
+												"value": "hmac accessKeyId=signature"
+											},
+											{
+												"description": "(Required) The unit is millisecond",
+												"key": "X-Timestamp",
+												"value": "1607184000"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/tasks/:taskId/approved",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"tasks",
+												":taskId",
+												"approved"
+											],
+											"variable": [
+												{
+													"key": "taskId"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json"
+										}
+									],
+									"cookie": [],
+									"body": "{\n \"id\": 1\n}"
+								}
+							]
+						}
+					],
+					"protocolProfileBehavior": {},
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "List all tasks",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "9aa4036c-b66f-4548-8836-01519228de67",
+								"exec": [
+									"const moment = require('moment');",
+									"",
+									"const accessKeyId = pm.environment.get('accessKeyId');",
+									"const accessSecret = pm.environment.get('accessSecret');",
+									"",
+									"const path = pm.request.url.getPath();",
+									"const query = pm.request.url.getQueryString();",
+									"const timestamp = moment().valueOf();",
+									"pm.environment.set('X-Timestamp', timestamp);",
+									"",
+									"const url = `${path}${query}`;",
+									"const method = pm.request.method;",
+									"const stringToSign = `${method}\\n${url}\\n${timestamp}`;",
+									"console.log(stringToSign)",
+									"",
+									"const signature = CryptoJS.HmacSHA256(stringToSign, accessSecret).toString(CryptoJS.enc.Base64)",
+									"console.log(\"signature\", signature);",
+									"const authorization = `hmac ${accessKeyId}=${signature}`",
+									"console.log(authorization)",
+									"pm.environment.set('Authorization', authorization)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"description": "(Required) hmac accessKeyId=signature",
+								"key": "Authorization",
+								"value": "{{Authorization}}"
+							},
+							{
+								"description": "(Required) The unit is millisecond",
+								"key": "X-Timestamp",
+								"value": "{{X-Timestamp}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/tasks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"tasks"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Untitled Example",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"description": "(Required) hmac accessKeyId=signature",
+										"key": "Authorization",
+										"value": "hmac accessKeyId=signature"
+									},
+									{
+										"description": "(Required) The unit is millisecond",
+										"key": "X-Timestamp",
+										"value": "1607184000"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/tasks?email=zclin.tw@gmail.com",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"tasks"
+									],
+									"query": [
+										{
+											"key": "email",
+											"value": "zclin.tw@gmail.com"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"data\": [\n  {\n   \"id\": 1,\n   \"creator\": \"zclin.tw@gmail.com\",\n   \"state\": \"pending\",\n   \"ttl\": 7200\n  },\n  {\n   \"id\": 1,\n   \"creator\": \"zclin.tw@gmail.com\",\n   \"state\": \"pending\",\n   \"ttl\": 7200\n  }\n ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Create a draft task",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "05815995-ca41-40a5-ae40-a2e81c05b4fa",
+								"exec": [
+									"const moment = require('moment');",
+									"",
+									"const accessKeyId = pm.environment.get('accessKeyId');",
+									"const accessSecret = pm.environment.get('accessSecret');",
+									"",
+									"const path = pm.request.url.getPath();",
+									"const query = pm.request.url.getQueryString();",
+									"const timestamp = moment().valueOf();",
+									"pm.environment.set('X-Timestamp', timestamp);",
+									"",
+									"const url = `${path}${query}`;",
+									"const method = pm.request.method;",
+									"const stringToSign = `${method}\\n${url}\\n${timestamp}`;",
+									"console.log(stringToSign)",
+									"",
+									"const signature = CryptoJS.HmacSHA256(stringToSign, accessSecret).toString(CryptoJS.enc.Base64)",
+									"console.log(\"signature\", signature);",
+									"const authorization = `hmac ${accessKeyId}=${signature}`",
+									"console.log(authorization)",
+									"pm.environment.set('Authorization', authorization)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"description": "(Required) hmac accessKeyId=signature",
+								"key": "Authorization",
+								"value": "{{Authorization}}"
+							},
+							{
+								"description": "(Required) The unit is millisecond",
+								"key": "X-Timestamp",
+								"value": "{{X-Timestamp}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/tasks",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"tasks"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Untitled Example",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "(Required) hmac accessKeyId=signature",
+										"key": "Authorization",
+										"value": "hmac accessKeyId=signature"
+									},
+									{
+										"description": "(Required) The unit is millisecond",
+										"key": "X-Timestamp",
+										"value": "1607184000"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/tasks",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"tasks"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"data\": {\n  \"id\": 1,\n  \"creator\": \"zclin.tw@gmail.com\",\n  \"state\": \"pending\",\n  \"ttl\": 86400\n }\n}"
+						}
+					]
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "Create a user",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "18cc6bef-7016-4aa5-ae61-c199a28d7577",
+								"exec": [
+									"const moment = require('moment');",
+									"",
+									"const accessKeyId = pm.environment.get('accessKeyId');",
+									"const accessSecret = pm.environment.get('accessSecret');",
+									"",
+									"const path = pm.request.url.getPath();",
+									"const query = pm.request.url.getQueryString();",
+									"const timestamp = moment().valueOf();",
+									"pm.environment.set('X-Timestamp', timestamp);",
+									"",
+									"const url = `${path}${query}`;",
+									"const method = pm.request.method;",
+									"const stringToSign = `${method}\\n${url}\\n${timestamp}`;",
+									"console.log(stringToSign)",
+									"",
+									"const signature = CryptoJS.HmacSHA256(stringToSign, accessSecret).toString(CryptoJS.enc.Base64)",
+									"console.log(\"signature\", signature);",
+									"const authorization = `hmac ${accessKeyId}=${signature}`",
+									"console.log(authorization)",
+									"pm.environment.set('Authorization', authorization)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"description": "(Required) hmac accessKeyId=signature",
+								"key": "Authorization",
+								"value": "{{Authorization}}"
+							},
+							{
+								"description": "(Required) The unit is millisecond",
+								"key": "X-Timestamp",
+								"value": "{{X-Timestamp}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"example\",\n    \"email\": \"example@gmail.com\"\n}",
+							"options": {
+								"raw": {}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/v1/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Untitled Example",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "(Required) hmac accessKeyId=signature",
+										"key": "Authorization",
+										"value": "hmac accessKeyId=signature"
+									},
+									{
+										"description": "(Required) The unit is millisecond",
+										"key": "X-Timestamp",
+										"value": "1607184000"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"zc\",\n    \"email\": \"zclin.tw@gmail.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"data\": {\n  \"id\": 1,\n  \"name\": \"zc\",\n  \"email\": \"zclin.tw@gmail.com\",\n  \"accessKeyId\": \"abajlajelja\",\n  \"accessSecret\": \"afjlaejflajeflkejaljeflk\"\n }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get users",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "5aec4ff9-15a2-4dc5-893b-d81a81b037c6",
+								"exec": [
+									"const moment = require('moment');",
+									"",
+									"const accessKeyId = pm.environment.get('accessKeyId');",
+									"const accessSecret = pm.environment.get('accessSecret');",
+									"",
+									"const path = pm.request.url.getPath();",
+									"const query = pm.request.url.getQueryString();",
+									"const timestamp = moment().valueOf();",
+									"pm.environment.set('X-Timestamp', timestamp);",
+									"",
+									"const url = `${path}${query}`;",
+									"const method = pm.request.method;",
+									"const stringToSign = `${method}\\n${url}\\n${timestamp}`;",
+									"console.log(stringToSign)",
+									"",
+									"const signature = CryptoJS.HmacSHA256(stringToSign, accessSecret).toString(CryptoJS.enc.Base64)",
+									"console.log(\"signature\", signature);",
+									"const authorization = `hmac ${accessKeyId}=${signature}`",
+									"console.log(authorization)",
+									"pm.environment.set('Authorization', authorization)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"description": "(Required) hmac accessKeyId=signature",
+								"key": "Authorization",
+								"value": "{{Authorization}}"
+							},
+							{
+								"description": "(Required) The unit is millisecond",
+								"key": "X-Timestamp",
+								"value": "{{X-Timestamp}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/v1/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"v1",
+								"users"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Untitled Example",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"description": "(Required) hmac accessKeyId=signature",
+										"key": "Authorization",
+										"value": "hmac accessKeyId=signature"
+									},
+									{
+										"description": "(Required) The unit is millisecond",
+										"key": "X-Timestamp",
+										"value": "1607184000"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"zc\",\n    \"email\": \"zclin.tw@gmail.com\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/users",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								}
+							],
+							"cookie": [],
+							"body": "{\n \"data\": {\n  \"id\": 1,\n  \"name\": \"zc\",\n  \"email\": \"zclin.tw@gmail.com\",\n  \"accessKeyId\": \"abajlajelja\",\n  \"accessSecret\": \"afjlaejflajeflkejaljeflk\"\n }\n}"
+						}
+					]
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"variable": [
+		{
+			"id": "baseUrl",
+			"key": "baseUrl",
+			"value": "https://localhost:8080/v1",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
+}

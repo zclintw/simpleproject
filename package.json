@@ -1,0 +1,43 @@
+{
+  "name": "zc",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "DEBUG=zc:* node src/index.js",
+    "test": "jest --coverage",
+    "dev": "DEBUG=zc:* nodemon src/index.js",
+    "tdd": "DEBUG=zc:* jest --runInBand --watch",
+    "image:update": "./scripts/imageupdate.sh",
+    "compose:up": "docker-compose up",
+    "compose:down": "docker-compose down",
+    "db:up": "docker-compose -f docker-compose-db.yml up",
+    "db:down": "docker-compose -f docker-compose-db.yml down"
+  },
+  "engines": {
+    "node": ">= 12.20"
+  },
+  "author": "zclin.tw@gmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.14.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "ioredis-mock": "^5.2.0",
+    "jest": "^26.6.3"
+  },
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "crypto-js": "^4.0.0",
+    "crypto-random-string": "^3.3.0",
+    "debug": "^4.3.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "http-errors": "^1.8.0",
+    "ioredis": "^4.19.2",
+    "joi": "^17.3.0",
+    "nconf": "^0.11.0",
+    "pg": "^8.5.1",
+    "ramda": "^0.27.1"
+  }
+}

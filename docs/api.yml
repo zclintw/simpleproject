@@ -1,0 +1,240 @@
+openapi: 3.0.0
+info:
+  version: 0.0.1
+  title: TaskManagement
+servers:
+  - url: 'https://localhost:8080/v1'
+paths:
+  /users:
+    post:
+      summary: ''
+      operationId: createUser
+      tags:
+        - User
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TimestampHeader'
+      requestBody:
+        description: Create a user
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: zc
+                email:
+                  type: string
+                  format: email
+                  example: zclin.tw@gmail.com
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int32
+                        example: 1
+                      name:
+                        type: string
+                        example: zc
+                      email:
+                        type: string
+                        format: email
+                        example: zclin.tw@gmail.com
+                      accessKeyId:
+                        type: string
+                        example: abajlajelja
+                      accessSecret:
+                        type: string
+                        example: afjlaejflajeflkejaljeflk
+  /tasks:
+    get:
+      summary: List all tasks
+      operationId: listTask
+      tags:
+        - Task
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TimestampHeader'
+        - name: email
+          in: query
+          schema:
+            type: string
+            format: email
+            example: zclin.tw@gmail.com
+          required: false
+          description: 'If present, get tasks created by the specific creator'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          format: int32
+                          example: 1
+                        creator:
+                          type: string
+                          format: email
+                          example: zclin.tw@gmail.com
+                        state:
+                          type: string
+                          enum:
+                            - pending
+                            - running
+                            - finished
+                          example: pending
+                        ttl:
+                          description: The unit is seconds
+                          type: integer
+                          format: int32
+                          example: 7200
+    post:
+      summary: Create a draft task
+      operationId: createTask
+      tags:
+        - Task
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TimestampHeader'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int32
+                        example: 1
+                      creator:
+                        type: string
+                        example: zclin.tw@gmail.com
+                      state:
+                        type: string
+                        enum:
+                          - pending
+                          - running
+                          - finished
+                        example: pending
+                      ttl:
+                        description: The unit is seconds
+                        type: integer
+                        format: int32
+                        example: 86400
+  /tasks/{taskId}:
+    get:
+      summary: Get the specific task
+      operationId: getTask
+      tags:
+        - Task
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TimestampHeader'
+        - name: taskId
+          in: path
+          description: The specific task will be returned
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int32
+                        example: 1
+                      creator:
+                        type: string
+                        format: email
+                        example: zclin.tw@gmail.com
+                      state:
+                        type: string
+                        enum:
+                          - pending
+                          - running
+                          - finished
+                        example: pending
+                      ttl:
+                        description: The unit is seconds
+                        type: integer
+                        format: int32
+                        example: 7200
+  /tasks/{taskId}/approved:
+    post:
+      summary: 'Approve the specific task, move it to the task queue'
+      operationId: approveTask
+      tags:
+        - Task
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TimestampHeader'
+        - name: taskId
+          in: path
+          description: The specific task will be approved
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int32
+                    example: 1
+components:
+  parameters:
+    AuthorizationHeader:
+      name: Authorization
+      in: header
+      description: hmac accessKeyId=signature
+      required: true
+      schema:
+        type: string
+        example: hmac accessKeyId=signature
+    TimestampHeader:
+      name: X-Timestamp
+      in: header
+      description: The unit is millisecond
+      required: true
+      schema:
+        type: integer
+        format: int32
+        example: 1607184000
